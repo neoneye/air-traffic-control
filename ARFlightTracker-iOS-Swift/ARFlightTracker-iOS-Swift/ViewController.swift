@@ -71,7 +71,7 @@ open class ViewController: UIViewController, CocoaMQTTDelegate,CLLocationManager
         
         if let flightInfoString = message.string!.data(using: .utf8, allowLossyConversion: false) {
             
-            let json = JSON(data: flightInfoString)
+            let json = try! JSON(data: flightInfoString)
             
             let flight = FlightInfo(json: json)!
             
@@ -145,13 +145,15 @@ open class ViewController: UIViewController, CocoaMQTTDelegate,CLLocationManager
         if let path = Bundle.main.path(forResource: "TestFlights", ofType: "json") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped)
-                let flightJSONObjects = JSON(data: data)
+                let flightJSONObjects = try! JSON(data: data)
                 if flightJSONObjects != JSON.null {
                     // print("jsonData:\(flightJSONObjects)")
                     
                     let flights = flightJSONObjects["flights"].arrayValue
                     for flight in flights {
-                        let flightInfo = FlightInfo(json: flight)!
+						guard let flightInfo = FlightInfo(json: flight) else {
+							continue
+						}
                         
                         let flightAnnotation = FlightAnnotation(coordinate:CLLocationCoordinate2D(latitude: flightInfo.latitude,longitude: flightInfo.longitude))
                         flightAnnotation.title=flightInfo.icao

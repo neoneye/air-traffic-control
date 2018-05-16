@@ -47,7 +47,7 @@ class RestCall {
             }
             
             
-                let weatherJson = JSON(data: responseData)
+                let weatherJson = try! JSON(data: responseData)
                 
                 let observation : [String : Any] = weatherJson["observation"].dictionaryObject!
             

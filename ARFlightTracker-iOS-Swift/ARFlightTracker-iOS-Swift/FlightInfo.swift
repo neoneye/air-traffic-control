@@ -16,6 +16,7 @@ struct FlightInfo  {
     let callSign: String        
     let headingInDegrees: Double
     let latitude : Double
+	let longitude : Double
     let groundStationId : String
     let velocityInMetersPerSecond : Double
     let type: String
